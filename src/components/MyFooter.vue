@@ -1,17 +1,58 @@
 <template>
-  <div class="footer" v-if="show">
-    <input type="text" name="" autofocus placeholder="添加待办事项" />
-    <button class="btn_1">保存</button>
+  <div class="footer" v-show="zz">
+    <input
+      type="text"
+      name=""
+      placeholder="添加待办事项"
+      v-focus
+      v-model="inputInfo"
+    />
+    <button class="btn_1" @click="add" v-btn>保存</button>
   </div>
 </template>
 
 <script>
+import { nanoid } from "nanoid";
 export default {
   name: "MyFoorer",
   data() {
     return {
-      show: true,
+      inputInfo: "",
     };
+  },
+  props: ["zz", "addList"],
+  watch: {
+    zz() {
+      if (this.zz === false) {
+        this.inputInfo = "";
+      }
+    },
+  },
+  methods: {
+    add() {
+      const todoObj = {
+        id: nanoid(),
+        todoInfi: this.inputInfo,
+      };
+      this.addList(todoObj, false);
+    },
+  },
+  directives: {
+    focus: {
+      update(e) {
+        e.focus();
+      },
+    },
+    btn: {
+      update(x, y, z) {
+        let inputInfo = z.context.inputInfo;
+        if (inputInfo === "") {
+          z.elm.style.color = "#999";
+        } else {
+          z.elm.style.color = "#0e73ff";
+        }
+      },
+    },
   },
 };
 </script>

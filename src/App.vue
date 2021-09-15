@@ -2,9 +2,11 @@
   <div id="app">
     <div class="zz" v-if="zz" @click="xiaoshi"></div>
     <MyHeader />
-    <MyMain />
-    <MyFooter />
-    <div class="logoBtn" @click="showInfo"></div>
+    <MyMain :TodoList="TodoList" />
+    <MyFooter :zz="zz" :TodoList="TodoList" :addList="addList" />
+    <div class="logoBtn" @click="showInfo">
+      <img src="../public/add.png" alt="" />
+    </div>
   </div>
 </template>
 
@@ -18,6 +20,7 @@ export default {
   data() {
     return {
       zz: false,
+      TodoList: [],
     };
   },
   methods: {
@@ -26,6 +29,10 @@ export default {
     },
     xiaoshi() {
       this.zz = !this.zz;
+    },
+    addList(e, bool) {
+      this.TodoList.unshift(e);
+      this.zz = bool;
     },
   },
 };
@@ -46,10 +53,10 @@ html {
 
 body {
   font-size: 0.18rem;
+  background: #f5f5f5;
 }
 .zz {
   position: absolute;
-  z-index: -1;
   top: 0;
   bottom: 0;
   left: 0;
@@ -59,8 +66,14 @@ body {
 .logoBtn {
   width: 1rem;
   height: 1rem;
-  border: 1px solid red;
   position: fixed;
-  bottom: 0;
+  bottom: 0.2rem;
+  left: 50%;
+  transform: translateX(-0.5rem);
+  z-index: -1;
+}
+.logoBtn > img {
+  width: 100%;
+  vertical-align: middle;
 }
 </style>
