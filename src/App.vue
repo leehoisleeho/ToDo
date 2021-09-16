@@ -20,7 +20,16 @@ export default {
   data() {
     return {
       zz: false,
-      TodoList: [],
+      TodoList: [
+        {
+          id: "001",
+          todoInfi: "吃饭",
+        },
+        {
+          id: "002",
+          todoInfi: "吃饭",
+        },
+      ],
     };
   },
   methods: {
