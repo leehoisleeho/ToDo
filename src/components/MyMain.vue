@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="container">
-      <div class="todoBox" v-for="(item, index) in MianTodoList" :key="index">
-        <div class="todo">
+      <div class="todoBox" v-for="(item, index) in MianTodoList" :key="item.id">
+        <div class="todo" :id="index">
           <div class="todoInfo">{{ item.todoInfi }}</div>
           <div class="slh">
             <img
               src="../../public/btn_1.png"
               alt=""
-              @touchstart="done(item.id, $event)"
+              @touchstart="done(item.id, index)"
             />
           </div>
         </div>
-        <div class="btn">完成</div>
+        <div class="btn" @touchstart="wc(index, item.id)">完成</div>
       </div>
       <div class="wjl" v-if="wjl">
         <img src="../../public/wjl.png" alt="" />
@@ -30,31 +30,46 @@ export default {
     return {
       MianTodoList: this.TodoList,
       wjl: true,
-      listId: "",
+      listId: null,
     };
   },
   watch: {
     MianTodoList() {
       if (this.MianTodoList === "") {
-        return;
+        this.wjl = true;
       } else {
         this.wjl = false;
       }
     },
   },
   methods: {
-    done(id, e) {
+    wc(index, id) {
+      let TodoListArr = this.TodoList;
+      for (let index = 0; index < TodoListArr.length; index++) {
+        if (id === TodoListArr[index].id) {
+          TodoListArr.splice(index, 1);
+        }
+      }
+    },
+    done(id, index) {
       this.listId = id;
-      let arr = e.path[2].classList;
+      let dom = document.getElementById(index);
+      let arr = dom.classList;
+      let doms = document.querySelectorAll(".todo");
       if (arr.length === 1) {
-        e.path[2].classList.add("todoActive");
-      } else if (arr.length === 2) e.path[2].classList.remove("todoActive");
+        for (let i = 0; i < doms.length; i++) {
+          doms[i].classList.remove("todoActive");
+        }
+        arr.add("todoActive");
+      } else if (arr.length === 2) {
+        arr.remove("todoActive");
+      }
     },
   },
 };
 </script>
 
-<style  scoped>
+<style>
 .todoBox {
   width: 90vw;
   margin-top: 0.2rem;
@@ -70,8 +85,8 @@ export default {
   background: #34a853;
   position: absolute;
   height: 1rem;
-  right: 0;
-  z-index: -1;
+  right: 0.01rem;
+  z-index: 1;
   bottom: 0;
   font-size: 0.3rem;
   color: white;
@@ -93,6 +108,8 @@ export default {
   height: 1rem;
   background: white;
   transition: all 0.65s;
+  z-index: 2;
+  position: relative;
 }
 .todoActive {
   transform: translateX(-1.5rem);
